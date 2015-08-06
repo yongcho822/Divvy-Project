@@ -1,0 +1,463 @@
+<!-- With mapbox tilelayer, not cartoDB basemap -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <meta content="utf-8" http-equiv="encoding">
+            <title>boom goes the dynamite</title>
+        <link rel="stylesheet" type="text/css" href="stylesheets/d3.slider3.css" media="screen" />
+        <link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
+        <script src='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>
+        <!-- // <script src='http://d3js.org/d3.v3.js'></script> -->
+        <script src="javascripts/d3.v3.min.js"></script>
+        <script src="javascripts/d3.slider3.js"></script>
+        
+    <style>
+
+        body {
+              height: 100%;
+              /*overflow: scroll;*/
+              margin:10px;
+              padding:10px;
+              border-width: 10;
+              font-family: "Avant Garde",Avantgarde,"Century Gothic",CenturyGothic,AppleGothic,sans-serif;}
+/*
+        #bigcontainer {
+              width: 100%
+            }
+*/
+        #container {
+              margin-left:600px;
+              text-align: center;
+              position: absolute;
+            }
+
+        #map { 
+              position: absolute;
+              top:5px;
+              bottom:5px;
+              left: 5px;
+              width: 600px;
+              height: 626px;
+              border-style: solid;
+              border-color: #00CCFF;
+              cursor: default;}
+
+        #main_header {
+              font-weight: bold;
+              font-size: 20px;
+              text-decoration: underline;
+              border-bottom: 3px solid #00CCFF;
+              display: inline;
+              margin-bottom:0em}
+
+        #descript {
+              font-size: 12px;
+              color: #999}
+        /*is there a way to automatically do the bottom margin instead of specifying a number for 'top'*/
+        #text_container {
+              border-style: solid;
+              border-width: 3px;
+              border-color: #D3D3D3;
+              border-radius: 25px; 
+              font-size: 12px;
+              font-family: Futura,"Trebuchet MS",Arial,sans-serif;
+              position: relative;
+              top: -10px; 
+              padding:10px;
+              padding-bottom: 0px;}
+
+        #first-question {
+              font-weight: bold;
+              text-decoration: underline;
+              font-size: 15px;
+              line-height: 75%;}
+
+        #closing {
+              position: relative; 
+              text-align: right; 
+              vertical-align: bottom; 
+              clear:both;x
+              font-size: 12px;
+              display: block;}
+
+        p.small{
+                line-height: 70%;}
+
+        #probe{
+              position: absolute;
+              font-family: "Avant Garde",Avantgarde,"Century Gothic",CenturyGothic,AppleGothic,sans-serif;
+              background-color: white;
+              border: 1px solid #ccc;
+              padding: 1px;
+              border-radius: 2px;
+              display: block;
+              font-size: 10px;
+              box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.25);}
+
+        #probe strong{
+              font-size: 10px;}
+
+        #probe span{
+              color: #999;}
+
+        #slider-div{
+              margin: 20px;
+              margin-left: 30px;
+            }  
+        #slider-container{
+              display:inline-block;
+              position: relative;
+              top: -12.5px;}
+
+        #play {
+              /*display: inline-block;*/
+              vertical-align: middle;
+              margin-top: 12px;
+              margin-right: 0px;
+              width: 30px;
+              height: 30px;
+              /*background-image: url(play.png);*/
+              border-radius: 3px;
+              /*margin-left: 20px;*/
+              cursor: pointer;
+              float: left;
+              }
+
+        #play.pause{
+              content:url(pause.png);
+              }
+
+        #axis path{
+          fill: none;
+        }
+
+        #axis .tick line{
+          stroke: #999;
+        }
+
+        #axis .tick text{
+          font-size: 12px;
+        }
+
+        #divvy3 {
+          position: relative;
+          left: 15px;
+          top: -5px;
+        }
+
+        #divvy2 {
+          position: relative;
+          top: -1px;
+          left: 0px;
+        }
+
+        #divvy1 {
+          position: relative;
+          left: -10px;
+        }
+
+        #legend text{
+          font-size: 12px;
+        }
+
+        circle{
+          fill: none;
+          stroke: #999;
+        }
+        circle.gain{
+          fill: #00CCFF;
+          /*fill: #47A3FF;*/
+          stroke: #fff;
+          opacity: 0.7;
+        }
+        circle.loss{
+          fill: #FF6666;
+          stroke: #fff;
+          opacity: 0.7;
+        }
+
+    </style>
+    </head>
+    <body>
+      <!-- <div id="bigcontainer"> -->
+        <div id='map'></div>
+        <div id='container'>
+            <h5 id="main_header">Bikeshare Balance in Chicago</h5>
+            <p id='descrip'>Hourly Divvy Bike Station Net Inflow & Outflow in 2014</p>
+            <div id="slider-container">
+              <div id="play">
+                <img style="width: 100%;" src="play.png" />
+              </div>
+              <div id="slider-div">
+                  <div></div>
+              </div>
+            </div>
+            <div id='text_container'>
+                <img id="divvy1" src="divvy1.png" style="float: center";>
+                <img id="divvy2" src="divvy2.png" style="float: center";>
+                <img id="divvy3" src="divvy3.png" style="float: center";>
+                <p id='first-question'>With an ever-growing ridership, understanding and planning<br></br>bike station rebalancing will become more and more important for Divvy.<br></br><br></br></p>
+                <!-- Ever wonder how under/over-run Divvy<br></br>bike stations become during the day?<br></br><br></br><br></br></p> -->
+                <p class='small'>By visualizing the total hourly traffic in and out of Divvy stations for all of 2014, <br></br>we can get a better sense of the ebbs of flows of bikeshare station traffic in the city of Chicago.<br></br><br></br></p>
+                <p class="small">The <font color="#FF6666">red</font> circles tell us that there was a net outflow of bikes from the particular station during the specified hour.<br></br>
+                The <font color="#00CCFF">blue</font> circles tell us the opposite: that more bikes came into than left that station during the same hour.<br></br><br></br>
+                </p>
+                <p>The larger the circle, the <u>greater the imbalance.</u><br></br></p>
+                <p>Commuter hot-spots, hourly fluctuations, potential areas in need of more rebalancing -<br> just a few of the things we can think about.<br></br></p>
+                <img src="chicagoflagemoji.png" style="float: center";>
+                <img src="bikeemoji.png" style="float: center";>
+                <img src="chicagoflagemoji.png" style="float: center";>
+                <p id='closing'>Designed by <a href="www.yongcho.com">Yong Cho</a>.  Data from <a href="https://www.divvybikes.com/">Divvy.</a></p>
+            </div>
+        </div>
+      <!-- </div> -->
+
+
+        <script>
+            //making Leaflet tileLayers with Mapbox.
+            L.mapbox.accessToken = 'pk.eyJ1IjoieW9uZ2NobzgyMiIsImEiOiIzZDBmYmMwYTQ3MzMyOWNhYTU0ZDM1ZGZhYjE3YjE3ZiJ9.OU3Ih_GF4sHHVSt__RCAZA';
+            var mapboxTiles = L.tileLayer('https://api.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=' + L.mapbox.accessToken, {
+                attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
+                });
+
+            var map = L.map('map', {zoomControl: true})
+                //instead of .addLayer, could've instead done .addTo(map) after the L.tileLayer (not setting it as a variable)
+                .addLayer(mapboxTiles)
+                //centering the map at startup. zoom level is 13.
+                .setView([41.8880, -87.637855], 12);
+            // Disable drag and zoom handlers.
+            // map.dragging.disable();
+            // map.touchZoom.disable();
+            // map.doubleClickZoom.disable();
+            // map.scrollWheelZoom.disable();
+
+            // Disable tap handler, if present.
+            if (map.tap) map.tap.disable();
+
+            var width = 600,
+                height = 626,
+                width2 = 602,
+                height2 = 634;
+
+            var probe,
+                hoverData;
+
+            var sliderScale, slider;
+
+            var sliderMargin = 65;
+
+            //making orderedColumns array to populate with hourly data.
+            var orderedColumns = [],
+                currentFrame = 0,
+                frameLength = 1250,
+                isPlaying = false,
+                interval
+
+            var svg = d3.select(map.getPanes().overlayPane).append("svg").attr('width', 1000).attr('height', 1000),
+                svg2 = d3.select(map.getPanes().overlayPane).append("svg").attr('width', 1300).attr('height', 1300),
+                g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+            probe = d3.select("#map").append("div")
+                .attr("id","probe");
+
+            //reading in the data! beginning of callback function.
+            d3.csv("ready.csv",function(data){
+                var first = data[0];
+                //making columns for every hour.
+                for ( var col in first ){
+                  if ( col != "station_name" && col != "latitude" && col != "longitude" ){
+                    orderedColumns.push(col);
+                  }
+                }
+
+                // draw station points -- this works!
+                reset(data);
+              
+                createSlider();
+
+                drawHour( orderedColumns[currentFrame] ); // initial map
+
+                // createLegend();
+
+                window.onresize = resize;
+                resize();
+
+                var cheat_function = function() { reset(data); drawHour( orderedColumns[currentFrame] )};
+
+                map.on("viewreset", cheat_function);
+
+                d3.select("#play")
+                  .attr("title","Play animation")
+                  .on("click",function(){
+                    if ( !isPlaying ){
+                      isPlaying = true;
+                      d3.select(this).classed("pause",true).attr("title","Pause animation");
+                      animate();
+                    } else {
+                      isPlaying = false;
+                      d3.select(this).classed("pause",false).attr("title","Play animation");
+                      clearInterval( interval );
+                    }
+                   });
+            });
+            //end of callback function
+
+
+            //listing functions.
+            function reset(data) {
+                for ( var i in data ){
+                    var location = map.latLngToLayerPoint(new L.LatLng(data[i].latitude, data[i].longitude))
+                    data[i]['x'] = location.x;
+                    data[i]['y'] = location.y;
+                }
+
+                g.selectAll('circle').remove();
+
+                g.selectAll('circle')
+                    .data(data).enter()
+                    .append('circle')
+                    .attr("cx",function(d) { return d.x; })
+                    .attr("cy",function(d) { return d.y; })
+                    .attr("r",3)
+                    .attr("vector-effect","non-scaling-stroke")
+                    .on("mousemove",function(d){
+                      hoverData = d;
+                      setProbeContent(d);
+                      probe
+                        .style( {
+                          "display" : "block",
+                          "top" : (d3.event.pageY - 30) + "px",
+                          "left" : (d3.event.pageX + 5) + "px"
+                        })
+                    })
+                    .on("mouseout",function(){
+                      hoverData = null;
+                      probe.style("display","none");
+                    })
+              }
+
+            function circleSize(d){
+              //use 0.25
+              return Math.sqrt( 0.25 * Math.abs(d) );
+            }
+
+            //coming up with the mouse-over pop-up box.
+            function setProbeContent(data){
+              var val = data[ orderedColumns[ currentFrame ] ];
+              var html = "<strong>" + data.station_name + "</strong>";
+                        // + format( Math.abs( val ) ) + " jobs " + ( val < 0 ? "lost" : "gained" ) + "<br/>" +
+                        // "<span>" + month + " " + m_y[1] + "</span>";
+              probe
+                .html( html );
+            }
+
+            //what actually brings the circles onto the maps for each hour.
+            function drawHour(h,between){
+              var circle = g.selectAll("circle")
+
+                .attr("class",function(d){
+                  return d[h] > 0 ? "gain" : "loss";
+                })
+              if ( between ){
+                circle
+                  .transition()
+                  .ease("linear")
+                  .duration(frameLength)
+                  .attr("r",function(d){
+                    return circleSize(d[h])
+                  });
+              } else {
+                circle.attr("r",function(d){
+                  return circleSize(d[h])
+                });
+              }
+            }
+
+            function createSlider(){
+
+              sliderScale = d3.scale.linear().domain([0,orderedColumns.length-1]);
+
+              var val = slider ? slider.value() : 0;
+
+              slider = d3.slider()
+                            .scale(sliderScale)
+                            .axis(d3.svg.axis().ticks(23))
+                            .min(0)
+                            .max(23)
+                            .step(1)
+                            // .ticks(23)
+                            .on("slide",function(event,value){
+                              if ( isPlaying ){
+                                clearInterval(interval);
+                              }
+                              currentFrame = value;
+                              drawHour( orderedColumns[value], d3.event.type != "drag" );
+                            })
+                                     
+               return d3.select('#slider-div').call(slider);
+
+            }
+
+            function animate(){
+              //setInterval works by specifying a function to execute, and then the time interval
+              interval = setInterval(function(){
+                currentFrame++;
+
+                // console.log(currentFrame)
+
+                if ( currentFrame == orderedColumns.length ) currentFrame = 0;
+
+                d3.select("#slider-div .d3-slider-handle")
+                  .style("left", 105*currentFrame/orderedColumns.length + "%" );
+                slider.value(currentFrame)
+
+                drawHour(currentFrame,true);
+
+                if ( currentFrame == orderedColumns.length - 1 ){
+                  isPlaying = false;
+                  d3.select("#play").classed("pause",false).attr("title","Play animation");
+                  
+                  //setInterval() returns an interval ID, which we can pass to clearInterval() to stop calling on currentFrame++
+                  clearInterval(interval);
+                  return;
+                }
+                //framelength is the number of milliseconds (500 in this case) that the setInterval() function should wait before each call to func.
+              },frameLength);
+            }
+
+            function createLegend(){
+              var legend = svg2.append("g").attr("id","legend").attr("transform","translate(560,10)");
+
+              legend.append("circle").attr("class","loss").attr("r",5).attr("cx",-65).attr("cy",10)
+              legend.append("circle").attr("class","gain").attr("r",5).attr("cx",-65).attr("cy",30)
+
+              legend.append("text").text("bike net outflow").attr("x",-55).attr("y",13);
+              legend.append("text").text("bike net inflow").attr("x",-55).attr("y",33);
+            }
+
+            function resize(){
+              var w = d3.select("#map").node().offsetWidth,
+                  h = window.innerHeight - 80;
+              var scale = Math.max( 1, Math.min( w/width, h/height ) );
+              svg
+                .attr("width",width*scale)
+                .attr("height",height*scale);
+              g.attr("transform","scale(" + scale + "," + scale + ")");
+
+              // var w2 = d3.select("#container").node().offsetWidth,
+              //     h2 = window.innerHeight - 80;
+              // var scale2 = Math.max( 1, Math.min( w2/width2, h2/height2 ) );
+
+              // document.getElementById('container').style.width = 'width2*scale2';
+              // document.getElementById('container').style.height = 'height2*scale2';
+              // document.getElementById('container').setAttribute("scale(" + scale2 + "," + scale2 + ")"));
+
+              // g2.attr("transform","scale(" + scale2 + "," + scale2 + ")");
+
+            }
+
+        </script>
+    </body>
+</html>
