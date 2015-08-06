@@ -42,7 +42,8 @@
               height: 626px;
               border-style: solid;
               border-color: #00CCFF;
-              cursor: default;}
+              cursor: default;
+            }
 
         #main_header {
               font-weight: bold;
@@ -50,11 +51,13 @@
               text-decoration: underline;
               border-bottom: 3px solid #00CCFF;
               display: inline;
-              margin-bottom:0em}
+              margin-bottom:0em
+            }
 
         #descript {
               font-size: 12px;
-              color: #999}
+              color: #999;
+            }
         /*is there a way to automatically do the bottom margin instead of specifying a number for 'top'*/
         #text_container {
               border-style: solid;
@@ -85,6 +88,10 @@
         p.small{
                 line-height: 70%;}
 
+        .centering{
+              float: center;
+        }
+
         #probe{
               position: absolute;
               font-family: "Avant Garde",Avantgarde,"Century Gothic",CenturyGothic,AppleGothic,sans-serif;
@@ -100,7 +107,8 @@
               font-size: 10px;}
 
         #probe span{
-              color: #999;}
+              color: #999;
+            }
 
         #slider-div{
               margin: 20px;
@@ -195,9 +203,9 @@
               </div>
             </div>
             <div id='text_container'>
-                <img id="divvy1" src="divvy1.png" style="float: center";>
-                <img id="divvy2" src="divvy2.png" style="float: center";>
-                <img id="divvy3" src="divvy3.png" style="float: center";>
+                <img id="divvy1" class="centering" src="divvy1.png";>
+                <img id="divvy2" class="centering" src="divvy2.png";>
+                <img id="divvy3" class="centering" src="divvy3.png";>
                 <p id='first-question'>With an ever-growing ridership, understanding and planning<br></br>bike station rebalancing will become more and more important for Divvy.<br></br><br></br></p>
                 <!-- Ever wonder how under/over-run Divvy<br></br>bike stations become during the day?<br></br><br></br><br></br></p> -->
                 <p class='small'>By visualizing the total hourly traffic in and out of Divvy stations for all of 2014, <br></br>we can get a better sense of the ebbs of flows of bikeshare station traffic in the city of Chicago.<br></br><br></br></p>
@@ -206,9 +214,9 @@
                 </p>
                 <p>The larger the circle, the <u>greater the imbalance.</u><br></br></p>
                 <p>Commuter hot-spots, hourly fluctuations, potential areas in need of more rebalancing -<br> just a few of the things we can think about.<br></br></p>
-                <img src="chicagoflagemoji.png" style="float: center";>
-                <img src="bikeemoji.png" style="float: center";>
-                <img src="chicagoflagemoji.png" style="float: center";>
+                <img src="chicagoflagemoji.png" class="centering";>
+                <img src="bikeemoji.png" class="centering";>
+                <img src="chicagoflagemoji.png" class="centering";>
                 <p id='closing'>Designed by <a href="www.yongcho.com">Yong Cho</a>.  Data from <a href="https://www.divvybikes.com/">Divvy.</a></p>
             </div>
         </div>
@@ -256,7 +264,7 @@
                 interval
 
             var svg = d3.select(map.getPanes().overlayPane).append("svg").attr('width', 1000).attr('height', 1000),
-                svg2 = d3.select(map.getPanes().overlayPane).append("svg").attr('width', 1300).attr('height', 1300),
+                // svg2 = d3.select(map.getPanes().overlayPane).append("svg").attr('width', 1300).attr('height', 1300),
                 g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
             probe = d3.select("#map").append("div")
@@ -428,7 +436,7 @@
             }
 
             function createLegend(){
-              var legend = svg2.append("g").attr("id","legend").attr("transform","translate(560,10)");
+              var legend = svg.append("g").attr("id","legend").attr("transform","translate(560,10)");
 
               legend.append("circle").attr("class","loss").attr("r",5).attr("cx",-65).attr("cy",10)
               legend.append("circle").attr("class","gain").attr("r",5).attr("cx",-65).attr("cy",30)
