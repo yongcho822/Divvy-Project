@@ -1,0 +1,50 @@
+<!-- With mapbox tilelayer, not cartoDB basemap -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset=utf-8 />
+        <meta content="utf-8" http-equiv="encoding">
+            <title>boom goes the dynamite</title>
+        <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/divvyfolder/d3.slider3.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/divvyfolder/blogdivvymap.css"/>
+        <script src="https://s3.amazonaws.com/divvyfolder/d3.v3.min.js"></script>
+        <script src="https://s3.amazonaws.com/divvyfolder/d3.slider3.js"></script>
+        <link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
+        <script src='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>
+    </head>
+    <body>
+        <div id='map'></div>
+        <div id='container'>
+            <h5 id="main_header">Bikeshare Balance in Chicago</h5>
+            <p id='descrip'>Hourly Divvy Bike Station Net Inflow & Outflow in 2014</p>
+            <div id="slider-container">
+              <div id="play">
+                <img style="width: 100%;" src="https://s3.amazonaws.com/divvyfolder/play.png" />
+              </div>
+              <div id="slider-div">
+                  <div></div> 
+              </div>
+            </div>
+            <div id='text_container'>
+                <img id="divvy1" class="centering" src="https://s3.amazonaws.com/divvyfolder/divvy1.png";>
+                <img id="divvy2" class="centering" src="https://s3.amazonaws.com/divvyfolder/divvy2.png";>
+                <img id="divvy3" class="centering" src="https://s3.amazonaws.com/divvyfolder/divvy3.png";>
+                <p id='first-question'>With an ever-growing ridership, understanding and planning<br></br>bike station rebalancing will become more and more important for Divvy.<br></br><br></br></p>
+                <!-- Ever wonder how under/over-run Divvy<br></br>bike stations become during the day?<br></br><br></br><br></br></p> -->
+                <p class='small'>By visualizing the total hourly traffic in and out of Divvy stations for all of 2014, <br></br>we can get a better sense of the ebbs of flows of bikeshare station traffic in the city of Chicago.<br></br><br></br></p>
+                <p class="small">The <font color="#FF6666">red</font> circles tell us that there was a net outflow of bikes from the particular station during the specified hour.<br></br>
+                The <font color="#00CCFF">blue</font> circles tell us the opposite: that more bikes came into than left that station during the same hour.<br></br><br></br>
+                </p>
+                <p>The larger the circle, the <u>greater the imbalance.</u><br></br></p>
+                <p>Commuter hot-spots, hourly fluctuations, potential areas in need of more rebalancing -<br> just a few of the things we can think about.<br></br></p>
+                <img src="https://s3.amazonaws.com/divvyfolder/chicagoflagemoji.png" class="centering";>
+                <img src="https://s3.amazonaws.com/divvyfolder/bikeemoji.png" class="centering";>
+                <img src="https://s3.amazonaws.com/divvyfolder/chicagoflagemoji.png" class="centering";>
+                <p id='closing'>Designed by <a href="www.yongcho.com/about">Yong Cho</a>.  Data from <a href="https://www.divvybikes.com/">Divvy.</a></p>
+            </div>
+        </div>
+        <!-- // <script src='http://d3js.org/d3.v3.js'></script> -->
+        <script src="https://s3.amazonaws.com/divvyfolder/blogdivvymap.js"></script>
+    </body>
+</html>
